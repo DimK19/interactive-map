@@ -1,9 +1,26 @@
 const countries = document.querySelectorAll("#map svg path");
 const selectedCountry = document.querySelector("#selectedCountry");
 
+/*
+// Testing code to find naming mismatches between data.js and world.svg
+Object.keys(countryData).forEach(data => {
+    let found = 0;
+    countries.forEach(country => {
+        const identifier = country.getAttribute("name") || country.id || country.getAttribute("class");
+        if(data == identifier) {
+            found = 1;
+        }
+    });
+    
+    if(found == 0) {
+        console.log(`${data} not found.`);
+    }
+});
+*/
+
 // 0. Pre-fetch ALL YouTube data immediately in the background
 Object.values(countryData).forEach(data => {
-    if (data.yt_links && data.yt_links.length > 0) {
+    if(data.yt_links && data.yt_links.length > 0) {
         // Create an array to hold the preloaded data
         data.fetchedVideos = new Array(data.yt_links.length).fill(null);
         
@@ -26,9 +43,9 @@ countries.forEach(country => {
     country.dataset.country = identifier;
 
     // Check if country exists AND has at least 1 link in the array
-    if (typeof countryData !== 'undefined' && countryData[identifier]) {
+    if(typeof countryData !== 'undefined' && countryData[identifier]) {
         const links = countryData[identifier].yt_links;
-        if (Array.isArray(links) && links.length > 0) {
+        if(Array.isArray(links) && links.length > 0) {
             country.classList.add("available");
         }
     }
@@ -44,7 +61,7 @@ function closePopup() {
 
 // 2. Dismiss popup when clicking the ocean or an unavailable country
 document.addEventListener("click", (e) => {
-    if (!e.target.closest('path.available') && !e.target.closest('#selectedCountry')) {
+    if(!e.target.closest('path.available') && !e.target.closest('#selectedCountry')) {
         closePopup();
     }
 });
@@ -52,14 +69,14 @@ document.addEventListener("click", (e) => {
 countries.forEach(country => {
     // 3. Handle hovering
     country.addEventListener("mouseenter", () => {
-        if (!country.classList.contains("available")) return;
+        if(!country.classList.contains("available")) return;
         const target = country.dataset.country;
         document.querySelectorAll(`#map svg path[data-country="${target}"]`)
             .forEach(p => p.classList.add("hovered"));
     });
 
     country.addEventListener("mouseleave", () => {
-        if (!country.classList.contains("available")) return;
+        if(!country.classList.contains("available")) return;
         const target = country.dataset.country;
         document.querySelectorAll(`#map svg path[data-country="${target}"]`)
             .forEach(p => p.classList.remove("hovered"));
@@ -85,10 +102,11 @@ countries.forEach(country => {
 
         selectedCountry.classList.remove("popup-top", "popup-bottom");
 
-        if (rect.top < 350) {
+        if(rect.top < 350) {
             y = rect.bottom + window.scrollY;
             selectedCountry.classList.add("popup-bottom");
-        } else {
+        }
+        else {
             y = rect.top + window.scrollY;
             selectedCountry.classList.add("popup-top");
         }
@@ -99,9 +117,10 @@ countries.forEach(country => {
         selectedCountry.style.top = `${y}px`;
         selectedCountry.style.display = "block";
 
-        if (links.length > 1) {
+        if(links.length > 1) {
             selectedCountry.classList.add("multi-video");
-        } else {
+        }
+        else {
             selectedCountry.classList.remove("multi-video");
         }
 
@@ -130,7 +149,7 @@ countries.forEach(country => {
         let carouselControls = "";
         let counterHtml = "";
 
-        if (links.length > 1) {
+        if(links.length > 1) {
             carouselControls = `
                 <button class="carousel-arrow left-arrow" disabled>&#10094;</button>
                 <button class="carousel-arrow right-arrow">&#10095;</button>
@@ -156,7 +175,7 @@ countries.forEach(country => {
         selectedCountry.querySelector(".close-btn").addEventListener("click", closePopup);
 
         // Attach scrolling logic if there are multiple videos
-        if (links.length > 1) {
+        if(links.length > 1) {
             const ytContainer = document.getElementById("yt-card-container");
             const track = ytContainer.querySelector('.carousel-track');
             const btnLeft = ytContainer.querySelector('.left-arrow');
